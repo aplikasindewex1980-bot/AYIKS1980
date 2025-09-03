@@ -9,11 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       # Checkout repository
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       # Setup JDK 17
       - name: Set up JDK 17
@@ -23,17 +21,21 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      # Give execute permission for gradlew
+      # Convert line endings ke LF (biar sed / bash aman)
+      - name: Convert line endings to LF
+        run: find . -type f -exec dos2unix {} \;
+
+      # Grant execute permission untuk gradlew
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Build APK release
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
+      # Build debug APK
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
 
-      # Upload APK artifact
-      - name: Upload Release APK
+      # Upload APK debug ke GitHub Actions Artifacts
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: AYIKS-release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          name: AYIKS-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
