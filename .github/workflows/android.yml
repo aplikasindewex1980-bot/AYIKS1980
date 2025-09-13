@@ -21,10 +21,10 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      # ✅ Fix gradlew agar aman di Linux runner
+      # ✅ Perbaiki gradlew line endings + permission
       - name: Fix gradlew
         run: |
-          dos2unix ./gradlew || echo "gradlew sudah LF"
+          sed -i 's/\r$//' ./gradlew
           chmod +x ./gradlew
 
       - name: Build Debug APK
